@@ -16,5 +16,10 @@ int main()
     //additional numbers
     unsigned int numberXy = 9;
     
-    return 0;
+    return wasanderes();
 }
+
+int wasanderes(){
+    return 121212;
+}
+

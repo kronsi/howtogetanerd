@@ -15,6 +15,7 @@ int main()
     i[2] = 66;
     i[3] = 77;
     i[4] = 1500;
+    //printf("%d", i[3]);
     
     //pointer
     int *pointer;
