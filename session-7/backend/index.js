@@ -2,6 +2,7 @@ import express from 'express';
 import mysql from "mysql";
 import fs from "fs";
 import moment from 'moment';
+import axios from "axios";
 
 const config = require("config.json")("./bn-config.json");
 const app = express();
@@ -19,6 +20,22 @@ const dbConnection = mysql.createPool({
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+
+app.get('/google', (req, res) => {
+    axios.get('http://google.de/')
+      .then(function (response) {
+        // handle success
+        console.log(response);
+        res.send(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        res.send('Fehler')
+      })
+    
+})
+
 //get books
 app.get('/books', (req, res) => {    
     let query = "SELECT * FROM books";
@@ -34,34 +51,41 @@ app.get('/books', (req, res) => {
 //get tours
 app.get('/tours', (req, res) => {    
     const data = fs.readFileSync('./example_tour.csv', 'utf8');
+    //console.log("data", data);
     const lines = data.split("\n");
+    //console.log("lines", lines);
     let header = [];
     let tours = [];
     for(let i=0; i < lines.length; i++){
         if(i==0){//header
             header = lines[i].split(";");
             header.push("DateTime");
+            //console.log("header", header);
         }
         else {//body
             const rows = lines[i].split(";");
             let tour = {};
-            for(let j=0; j < header.length; j++){
-                
+            for(let j=0; j < header.length; j++){                
                 switch( header[j] ){
                     case "DateTime":
-                        tour[header[j]] = moment().format("YYYY-DD-MM") + " 12:00:00";
+                        tour[header[j]] = moment().format("YYYY-MM-DD hh:mm:ss");
                     default:
                         if( rows[j] ){
                             tour[header[j]] = rows[j];
                         }
                         break;                    
                 }
+                
+                
             }
+            
             if( Object.keys(tour).length > 0 ){
                 tours.push(tour);
             }
         }
     }
+
+    //fs.writeFileSync("./test.json", JSON.stringify(tours));
     
     res.json(tours);    
 });
