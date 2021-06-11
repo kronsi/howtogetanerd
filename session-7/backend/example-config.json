@@ -1,0 +1,10 @@
+{
+    "mysql": {
+      "connectionLimit": 10,
+      "host": "",
+      "user": "",
+      "password": "",
+      "database": ""
+    }
+}
+  
