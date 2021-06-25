@@ -3,10 +3,13 @@ import mysql from "mysql";
 import fs from "fs";
 import moment from 'moment';
 import axios from "axios";
+import cors from 'cors';
+import bodyParser from 'body-parser';
+
 
 const config = require("config.json")("./bn-config.json");
 const app = express();
-const port = 3000;
+const port = 3001;
 
 
 const dbConnection = mysql.createPool({
@@ -16,6 +19,12 @@ const dbConnection = mysql.createPool({
     password        : config.mysql.password,
     database        : config.mysql.database
 });
+
+app.use(cors());
+// min timeout for callbacks that are not passed
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
